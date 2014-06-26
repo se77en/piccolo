@@ -79,12 +79,12 @@ func main() {
 
 	cmd := strings.Join(argv[1:], " ")
 
-	log.Printf("%severy %s running %s", forePurple, interval, cmd)
+	log.Printf("%severy %s running %s%s", forePurple, interval, cmd, normal)
 
 	for {
 		time.Sleep(interval)
 		start := time.Now()
-		log.Printf("%sexec `%s`", foreGreen, cmd)
+		log.Printf("%sexec `%s`%s", foreGreen, cmd, normal)
 		proc := exec.Command("/bin/sh", "-c", cmd)
 
 		proc.Start()
