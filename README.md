@@ -24,6 +24,8 @@ $ go install piccolo.go
 piccolo 700ms echo hello
 ~~~
 
+The time can be such as "ns", "us", "ms", "s", "m", "h".
+
 
 # License
 
