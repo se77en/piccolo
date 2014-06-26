@@ -11,9 +11,10 @@ import (
 )
 
 const usage = `
-  Usage: piccolo [options] <interval> <command>
+  Usage: piccolo <interval> <command>
 `
-const green1 = "\033[0;40;32m"
+
+// const green1 = "\033[0;40;32m"
 
 const (
 	normal        = "\033[0m"
