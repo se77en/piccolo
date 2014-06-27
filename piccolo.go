@@ -92,7 +92,7 @@ func main() {
 		ps := proc.ProcessState
 
 		if err != nil {
-			log.Printf("pid %d failed with %s", ps.Pid(), ps.String())
+			log.Printf("pid %d failed with %s", ps.Pid(), ps.String()) // TODO: reuse process
 			if *exit {
 				os.Exit(1)
 			}
