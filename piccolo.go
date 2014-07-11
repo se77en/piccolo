@@ -50,6 +50,11 @@ var (
 	exit  = flags.Bool("exit", false, "")
 )
 
+type timingFunc struct {
+	Func   func()
+	Ticker int
+}
+
 func printUsage() {
 	fmt.Println(usage)
 	os.Exit(0)
