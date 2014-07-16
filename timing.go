@@ -28,7 +28,7 @@ func AddTimingFunc(name string, ticker int, funcJob func()) {
 
 func StartTiming() {
 	ticker := time.NewTicker(time.Duration(10) * time.Minute)
-	go doTimingJob()
+	go doTimingJob(ticker.C)
 }
 
 func doTimingJob(c <-chan time.Time) {
