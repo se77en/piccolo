@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/se77en/piccolo/piccolo"
 	"log"
 	"os"
 	"os/exec"
@@ -13,37 +14,6 @@ import (
 const usage = `
   Usage: piccolo <interval> <command>
 `
-
-// const green1 = "\033[0;40;32m"
-
-const (
-	normal        = "\033[0m"
-	blod          = "\033[1m"
-	italics       = "\033[3m" // test failed
-	underline     = "\033[4m"
-	inverse       = "\033[7m"
-	strikethrough = "\033[9m" // test failed
-
-	foreBlack   = "\033[30m"
-	foreRed     = "\033[31m"
-	foreGreen   = "\033[32m"
-	foreYellow  = "\033[33m"
-	foreBlue    = "\033[34m"
-	forePurple  = "\033[35m"
-	foreCyan    = "\033[36m"
-	foreWhite   = "\033[37m"
-	foreDefault = "\033[39m"
-
-	backBlack   = "\033[40m"
-	backRed     = "\033[41m"
-	backGreen   = "\033[42m"
-	backYellow  = "\033[43m"
-	backBlue    = "\033[44m"
-	backPurple  = "\033[45m"
-	backCyan    = "\033[46m"
-	backWhite   = "\033[47m"
-	backDefault = "\033[49m"
-)
 
 var (
 	flags = flag.NewFlagSet("every", flag.ContinueOnError)
@@ -62,7 +32,27 @@ func printUsage() {
 
 func checkErr(err error) {
 	if err != nil {
-		log.Fatalf("%sError: %s", foreRed, err)
+		log.Fatal(piccolo.SetTextColor("red", fmt.Sprintf("Error: %s", err)))
+	}
+}
+
+func execCmd(cmd string) func() {
+	return func() {
+		start := time.Now()
+		log.Printf("exec %s", cmd)
+		proc := exec.Command("/bin/sh", "-c", cmd)
+
+		proc.Start()
+		err := proc.Wait()
+		ps := proc.ProcessState
+
+		if err != nil {
+			log.Printf("pid %d failed with %s", ps.Pid(), ps.String())
+			if *exit {
+				os.Exit(1)
+			}
+		}
+		log.Printf("pid %d completed in %s", ps.Pid(), time.Since(start))
 	}
 }
 
@@ -84,25 +74,8 @@ func main() {
 
 	cmd := strings.Join(argv[1:], " ")
 
-	log.Printf("%severy %s running %s%s", forePurple, interval, cmd, normal)
+	log.Print(piccolo.SetTextColor("magenta", fmt.Sprintf("every %s running %s", interval, cmd)))
 
-	for {
-		time.Sleep(interval)
-		start := time.Now()
-		log.Printf("%sexec `%s`%s", foreGreen, cmd, normal)
-		proc := exec.Command("/bin/sh", "-c", cmd)
-
-		proc.Start()
-		err := proc.Wait()
-		ps := proc.ProcessState
-
-		if err != nil {
-			log.Printf("pid %d failed with %s", ps.Pid(), ps.String()) // TODO: reuse process? use time.ticker
-			if *exit {
-				os.Exit(1)
-			}
-			continue
-		}
-		log.Printf("pid %d completed in %s", ps.Pid(), time.Since(start))
-	}
+	piccolo.AddTimingFunc("Command Line Job", 1000, execCmd(cmd))
+	piccolo.StartTiming(interval)
 }

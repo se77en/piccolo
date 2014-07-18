@@ -1,6 +1,7 @@
 package piccolo
 
 import (
+	"log"
 	"time"
 )
 
@@ -26,9 +27,10 @@ func AddTimingFunc(name string, ticker int, funcJob func()) {
 	timingFuncs[name] = fn
 }
 
-func StartTiming() {
-	ticker := time.NewTicker(time.Duration(10) * time.Minute)
-	go doTimingJob(ticker.C)
+func StartTiming(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	log.Println(ticker.C)
+	go doTimingJob()
 }
 
 func doTimingJob(c <-chan time.Time) {
@@ -36,6 +38,7 @@ func doTimingJob(c <-chan time.Time) {
 		<-c
 		timingCount++
 		for _, fn := range timingFuncs {
+			log.Println(fn.FuncJob)
 			if timingCount%fn.Ticker == 0 {
 				fn.FuncJob()
 			}
