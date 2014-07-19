@@ -16,7 +16,7 @@ const usage = `
 `
 
 var (
-	flags = flag.NewFlagSet("every", flag.ContinueOnError)
+	flags = flag.NewFlagSet("piccolo", flag.ContinueOnError)
 	exit  = flags.Bool("exit", false, "")
 )
 
@@ -76,6 +76,6 @@ func main() {
 
 	log.Print(piccolo.SetTextColor("magenta", fmt.Sprintf("every %s running %s", interval, cmd)))
 
-	piccolo.AddTimingFunc("Command Line Job", 1000, execCmd(cmd))
+	piccolo.AddTimingFunc("Command Line Job", -1, execCmd(cmd))
 	piccolo.StartTiming(interval)
 }

@@ -1,6 +1,7 @@
 package piccolo
 
 import (
+	"log"
 	"time"
 )
 
@@ -10,12 +11,10 @@ type timingFunc struct {
 }
 
 var (
-	timingCount int
 	timingFuncs map[string]*timingFunc
 )
 
 func init() {
-	timingCount = 0
 	timingFuncs = map[string]*timingFunc{}
 }
 
@@ -27,21 +26,29 @@ func AddTimingFunc(name string, ticker int, funcJob func()) {
 }
 
 func StartTiming(interval time.Duration) {
+	flag := make(chan bool)
 	ticker := time.NewTicker(interval)
-	go doTimingJob(ticker.C)
+	go doTimingJob(ticker.C, flag)
+	<-flag
 }
 
-func doTimingJob(c <-chan time.Time) {
+func doTimingJob(c <-chan time.Time, flag chan bool) {
 	for {
 		<-c
-		timingCount++
 		for _, fn := range timingFuncs {
-			if fn.Ticker == 0 {
+			if fn.Ticker == -1 {
 				fn.FuncJob()
 				continue
-			} else if timingCount%fn.Ticker == 0 {
+			}
+			if fn.Ticker > 0 {
+				log.Println(fn.Ticker)
 				fn.FuncJob()
+				fn.Ticker--
+			} else {
+				goto DONE
 			}
 		}
 	}
+DONE:
+	flag <- true
 }
