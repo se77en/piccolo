@@ -9,22 +9,43 @@ Piccolo is a tool that run a command periodically. It can be used both as a comm
 
 ~~~
 $ go get github.com/se77en/piccolo
+~~~
+
+### For Command Line
+
+~~~
 $ go install piccolo.go
+~~~
+
+### For Application
+
+~~~
+import github.com/se77en/piccolo/piccolo
 ~~~
 
 ## Usage
 
+### For Command Line
+
 ~~~
-  Usage: piccolo <interval> <command>
+Usage: piccolo <interval> <command>
 ~~~
 
-## Examples
+ Examples
 
 ~~~
 piccolo 700ms echo hello
 ~~~
 
 The time can be such as "ns", "us", "ms", "s", "m", "h".
+
+
+### For Application
+
+~~~
+piccolo.AddTimingFunc("test", -1, func(){fmt.Println("do something")})
+piccolo.StartTiming(7 * time.Second)
+~~~
 
 
 # License
