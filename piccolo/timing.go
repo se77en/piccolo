@@ -32,7 +32,7 @@ func StartTiming(interval time.Duration) {
 	<-flag
 }
 
-func doTimingJob(c <-chan time.Time, flag chan bool) {
+func doTimingJob(c <-chan time.Time, flag chan<- bool) {
 	for {
 		<-c
 		for _, fn := range timingFuncs {
