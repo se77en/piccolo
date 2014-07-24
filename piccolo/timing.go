@@ -26,13 +26,13 @@ func AddTimingFunc(name string, ticker int, funcJob func()) {
 }
 
 func StartTiming(interval time.Duration) {
-	flag := make(chan bool)
+	flag := make(chan struct{})
 	ticker := time.NewTicker(interval)
 	go doTimingJob(ticker.C, flag)
 	<-flag
 }
 
-func doTimingJob(c <-chan time.Time, flag chan<- bool) {
+func doTimingJob(c <-chan time.Time, flag chan<- struct{}) {
 	for {
 		<-c
 		for _, fn := range timingFuncs {
@@ -50,5 +50,5 @@ func doTimingJob(c <-chan time.Time, flag chan<- bool) {
 		}
 	}
 DONE:
-	flag <- true
+	flag <- struct{}{}
 }
