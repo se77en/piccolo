@@ -1,4 +1,4 @@
-Piccolo [![Build Status](https://drone.io/github.com/se77en/piccolo/status.png)](https://drone.io/github.com/se77en/piccolo/latest)
+Piccolo [![Build Status](https://drone.io/github.com/se77en/piccolo/status.png)](https://drone.io/github.com/se77en/piccolo/latest)  [![Build status](https://ci.appveyor.com/api/projects/status/85peroqvohwt71yd)](https://ci.appveyor.com/project/se77en/piccolo)
 =======
 
 Piccolo is a tool that run a command periodically. It can be used both as a command line utility and a library
